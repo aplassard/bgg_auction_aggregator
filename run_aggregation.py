@@ -10,8 +10,6 @@ def get_wishlist_items(user='aplassard'):
     response = urllib2.urlopen(wishlist_url)
     xml = response.read()
     root = ET.fromstring(xml)
-    for el in root:
-        print el.attrib
     game_ids = map(lambda x: x.attrib['objectid'], root)
     return set(game_ids)
 
