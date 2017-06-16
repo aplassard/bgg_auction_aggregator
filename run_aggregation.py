@@ -3,7 +3,9 @@ import xml.etree.ElementTree as ET
 import time
 import sys
 
-geeklist_url='http://www.boardgamegeek.com/xmlapi/geeklist/'
+closed_list = ['closed', 'CLOSED', 'Closed']
+geeklist_url = 'http://www.boardgamegeek.com/xmlapi/geeklist/'
+
 
 def construct_item_url(geeklist, game):
     geeklist_id = geeklist.attrib['objectid']
@@ -11,13 +13,15 @@ def construct_item_url(geeklist, game):
     url = 'https://boardgamegeek.com/geeklist/'+geeklist_id+'/item/'+game_id+'#item'+game_id
     return url
 
+
 def get_wishlist_items(user='aplassard'):
-    wishlist_url='http://www.boardgamegeek.com/xmlapi/collection/'+user+'?wishlist=1'
+    wishlist_url = 'http://www.boardgamegeek.com/xmlapi/collection/'+user+'?wishlist=1'
     response = urllib2.urlopen(wishlist_url)
     xml = response.read()
     root = ET.fromstring(xml)
     game_ids = map(lambda x: x.attrib['objectid'], root)
     return set(game_ids)
+
 
 def get_geeklists():
     meta_geeklist = geeklist_url+'66420'
@@ -26,6 +30,7 @@ def get_geeklists():
     root = ET.fromstring(xml)
     geeklists = filter(lambda x: x.attrib.has_key('objectid'), root)
     return geeklists
+
 
 def get_games(geeklist):
     try:
@@ -41,16 +46,19 @@ def get_games(geeklist):
 
     return games
 
+
 def main():
     user = sys.argv[1] if len(sys.argv)>1 else 'aplassard'
     game_ids = get_wishlist_items(user)
-    print len(game_ids),'games were found on the wishlist for', user
+    print len(game_ids), 'games were found on the wishlist for', user
     geeklists = get_geeklists()
     aggregated_games = []
     for geeklist in geeklists:
-        time.sleep(0.1)
-        games = get_games(geeklist)
-        aggregated_games.append((geeklist,games))
+        # don't retrieve games for geeklists which identify as closed
+        if not any(word in geeklist.get('objectname') for word in closed_list):
+            time.sleep(0.1)
+            games = get_games(geeklist)
+            aggregated_games.append((geeklist, games))
 
     for ag in aggregated_games:
         gl = ag[0]
