@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import time
 import sys
 
-closed_list = ['closed', 'CLOSED', 'Closed']
+closed_list = ['closed', 'CLOSED', 'Closed', 'ENDED', 'ended', 'Ended']
 geeklist_url = 'http://www.boardgamegeek.com/xmlapi/geeklist/'
 
 
@@ -48,7 +48,7 @@ def get_games(geeklist):
 
 
 def main():
-    user = sys.argv[1] if len(sys.argv)>1 else 'aplassard'
+    user = sys.argv[1] if len(sys.argv) > 1 else 'aplassard'
     game_ids = get_wishlist_items(user)
     print len(game_ids), 'games were found on the wishlist for', user
     geeklists = get_geeklists()
