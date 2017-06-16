@@ -5,6 +5,12 @@ import sys
 
 geeklist_url='http://www.boardgamegeek.com/xmlapi/geeklist/'
 
+def construct_item_url(geeklist, game):
+    geeklist_id = geeklist.attrib['objectid']
+    game_id = game.attrib['id']
+    url = 'https://boardgamegeek.com/geeklist/'+geeklist_id+'/item/'+game_id+'#item'+game_id
+    return url
+
 def get_wishlist_items(user='aplassard'):
     wishlist_url='http://www.boardgamegeek.com/xmlapi/collection/'+user+'?wishlist=1'
     response = urllib2.urlopen(wishlist_url)
@@ -54,7 +60,8 @@ def main():
             game_name = game.attrib['objectname']
             game_id = game.attrib['objectid']
             if game_id in game_ids:
-                print game_name, gl_name
+                item_url = construct_item_url(gl, game)
+                print game_name, item_url
 
 
 
