@@ -1,6 +1,6 @@
 # How to run BG Auction Aggregator locally
 
-This software is written in Python and requires the use of Python's [virtiualenv software](https://www.dabapps.com/blog/introduction-to-pip-and-virtualenv-python/).
+This software is written in Python and requires the use of Python's [virtualenv software](https://www.dabapps.com/blog/introduction-to-pip-and-virtualenv-python/).
 
 ## Installation
 
