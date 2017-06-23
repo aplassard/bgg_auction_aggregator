@@ -47,7 +47,7 @@ def get_games(geeklist):
     return games
 
 
-def main():
+def get_matching_auction_items():
     user = sys.argv[1] if len(sys.argv) > 1 else 'aplassard'
     game_ids = get_wishlist_items(user)
     print len(game_ids), 'games were found on the wishlist for', user
