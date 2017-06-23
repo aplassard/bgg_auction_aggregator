@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+    <head>
+        <title>BGG Auction Aggregator</title>
+        <link rel="stylesheet" href="/static/styles.css" type="text/css" media="all">
+    </head>
+
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1 class="header-heading">BGG Auction Aggregator</h1>
+        </div>
+
+        <div class="content">
+          <div class="main">
+            <div>
+
+                <p>Greetings! Search for BGG auctions matching items on your BGG wishlist!</p>
+
+                <form action="/results/">
+                    <input type="text" name="username" placeholder="BGG username" />
+                    <input type="submit" value="Search" />
+                </form>
+
+                <hr />
+
+                {% block search_results %}{% endblock search_results %}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+</html>
