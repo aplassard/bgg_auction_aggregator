@@ -2,6 +2,14 @@
 
 {% block search_results %}
     <p>
-        This is the search results section.
+        <b>{{ context.results.count }}</b> games were found on the wishlist for <b>{{ context.username }}</b>.<br />
+        Displaying <b>{{ context.results.games | length }}</b> games found in auctions.
     </p>
+    {% if context.results.games | length %}
+        <ul>
+        {% for game in context.results.games %}
+            <li><a href="{{ game.url }}">{{ game.name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock search_results %}

@@ -14,8 +14,8 @@ def construct_item_url(geeklist, game):
     return url
 
 
-def get_wishlist_items(user='aplassard'):
-    wishlist_url = 'http://www.boardgamegeek.com/xmlapi/collection/'+user+'?wishlist=1'
+def get_wishlist_items(username):
+    wishlist_url = 'http://www.boardgamegeek.com/xmlapi/collection/' + username + '?wishlist=1'
     response = urllib2.urlopen(wishlist_url)
     xml = response.read()
     root = ET.fromstring(xml)
@@ -42,17 +42,27 @@ def get_games(geeklist):
         games = filter(lambda x: x.attrib.has_key('objectid'), root)
     except:
         games = []
-        print 'Something died in', geeklist.attrib['objectname']
+        # print 'Something died in', geeklist.attrib['objectname']
 
     return games
 
 
-def get_matching_auction_items():
-    user = sys.argv[1] if len(sys.argv) > 1 else 'aplassard'
-    game_ids = get_wishlist_items(user)
-    print len(game_ids), 'games were found on the wishlist for', user
+def get_matching_auction_items(username):
+    if not username:
+        username = sys.argv[1] if len(sys.argv) > 1 else 'aplassard'
+
+    game_ids = get_wishlist_items(username)
+
+    # print len(game_ids), 'games were found on the wishlist for', username
+
+    results = {
+        'count': len(game_ids),
+        'games': [],
+    }
+
     geeklists = get_geeklists()
     aggregated_games = []
+
     for geeklist in geeklists:
         # don't retrieve games for geeklists which identify as closed
         if not any(word in geeklist.get('objectname') for word in closed_list):
@@ -69,9 +79,12 @@ def get_matching_auction_items():
             game_id = game.attrib['objectid']
             if game_id in game_ids:
                 item_url = construct_item_url(gl, game)
-                print game_name, item_url
+                results['games'].append({'name': game_name, 'url': item_url})
+                # print game_name, item_url
+
+    return results
 
 
-
-if __name__=='__main__':
-    main()
+if __name__ == '__main__':
+    username = sys.argv[1] if len(sys.argv) > 1 else 'aplassard'
+    get_matching_auction_items(username)
